@@ -1,9 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names, avoid_unnecessary_containers
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:layout/pages/detail.dart';
+
+import 'package:http/http.dart' as http;
+import 'dart:async';
 
 // ignore: use_key_in_widget_constructors
 class HomePage extends StatefulWidget {
@@ -19,7 +21,10 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff885566),
-        title: Text("แอปดีแน่นอน"),
+        title: Text(
+          "แอปนี้ดีแน่นอน",
+          style: TextStyle(color: Colors.amber),
+        ),
 
         // flexibleSpace: Image(
         //   image: NetworkImage(
@@ -30,18 +35,22 @@ class _HomePageState extends State<HomePage> {
       body: Padding(
           padding: const EdgeInsets.all(30),
           child: FutureBuilder(
-            builder: (context, sanpshot) {
-              var data = json.decode(sanpshot.data.toString());
+            builder: (context, AsyncSnapshot sanpshot) {
+              // var data = json.decode(sanpshot.data.toString());
               return ListView.builder(
                 itemBuilder: (BuildContext context, int index) {
-                  return MyBox(data[index]['title'], data[index]['subtitle'],
-                      data[index]['image_url'], data[index]['detail']);
+                  return MyBox(
+                      sanpshot.data[index]['title'],
+                      sanpshot.data[index]['subtitle'],
+                      sanpshot.data[index]['image_url'],
+                      sanpshot.data[index]['detail']);
                 },
-                itemCount: data.length,
+                itemCount: sanpshot.data.length,
               );
             },
-            future:
-                DefaultAssetBundle.of(context).loadString('assets/data.json'),
+            future: getData(),
+            // future:
+            //     DefaultAssetBundle.of(context).loadString('assets/data.json'),
           )),
     );
   }
@@ -100,5 +109,14 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  Future getData() async {
+    //https://raw.githubusercontent.com/Theerawat30/BasicAPI/main/data.json
+    var url = Uri.https(
+        'raw.githubusercontent.com', '/Theerawat30/BasicAPI/main/data.json');
+    var reaponse = await http.get(url);
+    var result = json.decode(reaponse.body);
+    return result;
   }
 }

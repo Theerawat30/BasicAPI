@@ -30,10 +30,8 @@ class _DetailPageState extends State<DetailPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff885566),
-        title: Text(
-          "Detail",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
+        title: Text("Detail",
+            style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
       ),
       body: Container(
         // margin: EdgeInsets.only(top: 20),
